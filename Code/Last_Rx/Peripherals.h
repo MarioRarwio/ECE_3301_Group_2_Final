@@ -7,7 +7,7 @@ struct Peripherals
   byte jX;            // joystick X val
   byte jY;            // joystick Y val
   byte pot1;          // Pot 1 (blue)
-  ///byte pot2;          // Pot 2 (red)
+  //byte pot2;          // Pot 2 (red)
 
 };
 #endif

@@ -14,7 +14,7 @@ class TxControl
     void Read_J();                 // Read from A0 & A1
     void Read_Pots();              // Read from A2 & A3
     byte Get_Pot1();               // Get value from Pot1 (blue)
-    byte Get_Pot2();               // Get value from Pot2 (red)
+    //byte Get_Pot2();               // Get value from Pot2 (red)
     byte Get_jX();               // Get value from joystick X dir
     byte Get_jY();                // Get value from joystick Y dir
     void Print_Data();
