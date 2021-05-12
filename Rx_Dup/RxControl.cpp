@@ -120,8 +120,6 @@ void RxControl::Map_Motors()
     }
 
   }
-
-
 }
 void RxControl::Act_DC()
 {
@@ -141,4 +139,14 @@ void RxControl::Act_Servo()
   serv1.write(sSpeed);
 //  Serial.println("Servo = " + String(sSpeed));
 //  Serial.println("Directions:\tFwd = " + String(dirF) + "\tRvs = " + String(dirR));
+}
+void RxControl::Reverse()
+{
+  Serial.println("Reverse!!!");
+  dirR = 0;
+  dirF = 1;
+  jSpeed = 175;
+  Act_Servo();
+  Act_DC();
+  delay(1000);
 }

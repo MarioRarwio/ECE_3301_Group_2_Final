@@ -20,6 +20,7 @@ class RxControl
     void Map_Motors();
     void Act_DC();
     void Act_Servo();
+    void Reverse();
     Peripherals Get_Data();
     
   private:

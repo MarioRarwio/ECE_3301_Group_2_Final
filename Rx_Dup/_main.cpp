@@ -12,8 +12,8 @@
 #define reverse 2         //Digital
 #define CE      9
 #define CSN     8
-#define TRIG_PIN 7
-#define ECHO_PIN  4
+#define trigPin 7
+#define echoPin  4
 //Prototypes
 void GetData();
 void ShowData();
@@ -25,19 +25,23 @@ const byte address[6] = "00001";        //address through which
 RxControl Rx;                           //Receiver Object
 bool newData = false;
 int currentTime = 0;
+int cTime = 0;
+int rTime = 0;
 int timeRecieved = 0;
 const int timeOut = 20000;
 byte dataReceived[32];                   // this must match dataToSend
 // in the TX
+long duration, cm = 100, inches = 100;
+
 
 //const int TRIG_PIN = 7; // digital pin 7
 //const int ECHO_PIN = 4; // digital pin 4
-const unsigned int MAX_DIST = 23200;
-unsigned long t1;
-unsigned long t2;
-unsigned long pulse_width;
-float cm;
-float inches;
+//const unsigned int MAX_DIST = 23200;
+//unsigned long t1;
+//unsigned long t2;
+//unsigned long pulse_width;
+//float cm;
+//float inches;
 
 void setup()
 {
@@ -48,38 +52,35 @@ void setup()
   radio.startListening();               //Set module as receiver
   Rx.init(dc, serv1, forward, reverse);
   Serial.println("I am receiver");
-  pinMode(TRIG_PIN, OUTPUT);
-  pinMode(ECHO_PIN, INPUT);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
 }
 
 
 
 void loop()
 {
-  digitalWrite(TRIG_PIN, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(TRIG_PIN, LOW);
-
-  while ( digitalRead(ECHO_PIN) == 0 )
+  cTime = millis();
+  if (cTime - rTime >= 350)
   {
-    Serial.println("Echo...0");
+    rTime = millis();
+    digitalWrite(trigPin, LOW);
+    delay(6);
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+    pinMode(echoPin, INPUT);
+    duration = pulseIn(echoPin, HIGH);
+    cm = (duration / 2) / 29.1;
+    inches = (duration / 2) / 74;
+    Serial.println(inches);
   }
-
-  t1 = micros();
-  while ( digitalRead(ECHO_PIN) == 1)
+  if (inches <= 3)
   {
-    Serial.println("Echo....1");
+    Rx.Reverse();
+    
   }
-  t2 = micros();
-  pulse_width = t2 - t1;
-
-  cm = pulse_width / 58.0;
-  inches = pulse_width / 148.0;
-
-  Serial.print("Distance " + String(inches) + "\t");
-  //delay(60); //this delay is unneeded now
-  //  Read the data if available in buffer
-  if (radio.available())
+  else if (radio.available())
   {
     //    byte text[32] = {0};
     //    radio.read(&text, sizeof(text));
